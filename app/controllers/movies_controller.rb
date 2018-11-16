@@ -9,7 +9,7 @@ class MoviesController < ApplicationController
   # def all_ratings
   #   %w(G PG PG-13 NC-17 R)
   # end
-  
+
   def index
     #@movies = Movie.all #first version
     sort = params[:sort] || session[:sort]
@@ -19,17 +19,23 @@ class MoviesController < ApplicationController
     when 'release_date'
       ordering,@date_header = {:release_date => :asc}, 'hiorderinglite'
     end
-     @all_ratings = Movie.all_ratings
-     @selected_ratings = params[:ratings]|| session[:ratings] || {}
+    @all_ratings = Movie.all_ratings
+    @selected_ratings = params[:ratings]|| session[:ratings] || {}
 
-     if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
-       session[:sort] = sort
-       session[:ratings] = @selected_ratings
-       redirect_to :sort => sort, :ratings => @selected_ratings and return
-     end
+    if @selected_ratings == {}
+      if params[:ratings].nil? and params[:commit].nil?
+        @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
+      end
+    end
+
+    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+      session[:sort] = sort
+      session[:ratings] = @selected_ratings
+      redirect_to :sort => sort, :ratings => @selected_ratings and return
+    end
 
     @movies = Movie.where(rating: @selected_ratings.keys).order(ordering)
-  
+
   end
 
   def new
