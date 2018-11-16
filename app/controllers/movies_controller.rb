@@ -17,22 +17,18 @@ class MoviesController < ApplicationController
     when 'title'
       ordering,@title_header = {:title => :asc}, 'hilite'
     when 'release_date'
-      ordering,@date_header = {:release_date => :asc}, 'hilite'
+      ordering,@date_header = {:release_date => :asc}, 'hiorderinglite'
     end
      @all_ratings = Movie.all_ratings
      @selected_ratings = params[:ratings]|| session[:ratings] || {}
-    
-     if @selected_ratings == {}
-       @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
-     end
 
      if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
        session[:sort] = sort
        session[:ratings] = @selected_ratings
        redirect_to :sort => sort, :ratings => @selected_ratings and return
      end
-    @movies = Movie.order(ordering)
-    #@movies = Movie.where(rating: @selected_ratings.keys).order(ordering)
+
+    @movies = Movie.where(rating: @selected_ratings.keys).order(ordering)
   
   end
 
