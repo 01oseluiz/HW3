@@ -11,3 +11,5 @@ tmp/
 /vendor/bundle/
 
 .idea/*
+
+coverage/*
