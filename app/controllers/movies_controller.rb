@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   def index
     #@movies = Movie.all #first version
     #
-    handler_filters_and_order
+    return unless handler_filters_and_order
 
     @movies = Movie.where(rating: @selected_ratings.keys).order(@ordering)
 
@@ -49,7 +49,6 @@ class MoviesController < ApplicationController
   end
 
   def movies_by_director
-    handler_filters_and_order
 
     actual_movie = Movie.find(params[:id])
 
@@ -59,6 +58,7 @@ class MoviesController < ApplicationController
       flash[:notice] = "This movie has no director"
       redirect_to movie_path(actual_movie)
     else
+      return unless handler_filters_and_order
       render 'movies/index'
     end
   end
@@ -92,8 +92,10 @@ class MoviesController < ApplicationController
     if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
       session[:sort] = sort
       session[:ratings] = @selected_ratings
-      redirect_to :sort => sort, :ratings => @selected_ratings
+      redirect_to :sort => sort, :ratings => @selected_ratings and return false
     end
+
+    return true
   end
 
 end

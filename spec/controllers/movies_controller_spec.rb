@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe MoviesController, type: :controller do
 
@@ -15,18 +16,31 @@ RSpec.describe MoviesController, type: :controller do
 
         Movie.all.each do |movie|
           @movie_params = movie.attributes
-          @movie_params[:director] = "Stan Lee"
+          @movie_params[:director] = "Director X"
 
           post :update, params: {id:movie.id, movie: @movie_params}
 
-          expect(Movie.find(movie).director).to eq("Stan Lee")
+          expect(Movie.find(movie).director).to eq("Director X")
           expect(response).to redirect_to(movie_path(movie))
         end
       end
 
       context 'when director exist' do
+        before do
+          Movie.all.each do |movie|
+            movie.director = "Director X"
+          end
+          Movie.create(title: 'When Harry Met Sally',  rating: 'R', release_date: '21-Jul-1989', director: "Another Director X")
+        end
+
         it 'should show all movies with the same director' do
-          pending
+          expect(Movie.count).not_to eq(0)
+
+          Movie.all.each do |movie|
+            get :movies_by_director, params: {id: movie.id}
+            expect(response).to have_http_status(200)
+          end
+
         end
       end
 

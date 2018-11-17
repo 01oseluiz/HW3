@@ -16,7 +16,7 @@ Scenario: Add director info to an existing movie
 	| title                   | rating | release_date |
 	| Aladdin                 | G      | 25-Nov-1992  |
 	And I am on the editing page of the movie 'Aladdin'
-	When I fill in "Director" with "Stan Lee"
+	When I fill in "Director" with "Director X"
 	And I press "Update Movie Info"
 	Then I should be on the page of the movie 'Aladdin'
-	And I should see "Stan Lee"
+	And I should see "Director X"
