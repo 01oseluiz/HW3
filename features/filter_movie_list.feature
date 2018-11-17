@@ -60,10 +60,10 @@ Scenario: filter movies with the same director when movie has a director
   Given I am on the page of the movie 'Alladin'
   And The following movies has the following directors:
   | title                   | director |
-  | Aladdin                 | Stan Lee  |
-  | The Terminator          | Stan Lee  |
-  | When Harry Met Sally    | Stan Lee  |
-  | The Help                | Stan Lee  |
+  | Aladdin                 | Stan Lee |
+  | The Terminator          | Stan Lee |
+  | When Harry Met Sally    | Stan Lee |
+  | The Help                | Stan Lee |
   Then I should see "Movies with same director"
   When I press "Movies with same director"
   Then I should be on "Movies with director 'Stan Lee'"
@@ -73,8 +73,8 @@ Scenario: filter movies with the same director when movie has a director
   And I should see "When Harry Met Sally"
 
 Scenario: filter movies with the same director when movie has not a director
-  Given I am on the page of the movie 'Alladin'
+  Given I am on thea page of the movie 'Aladdin'
   Then I should see "Movies with same director"
   When I press "Movies with same director"
-  Then I should be on "the page of the movie 'Alladin'"
+  Then I should be on "the page of the movie 'Aladdin'"
   And I should see "This movie has no director"
