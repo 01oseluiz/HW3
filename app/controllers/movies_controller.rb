@@ -12,29 +12,10 @@ class MoviesController < ApplicationController
 
   def index
     #@movies = Movie.all #first version
-    sort = params[:sort] || session[:sort]
-    case sort
-    when 'title'
-      ordering,@title_header = {:title => :asc}, 'hilite'
-    when 'release_date'
-      ordering,@date_header = {:release_date => :asc}, 'hiorderinglite'
-    end
-    @all_ratings = Movie.all_ratings
-    @selected_ratings = params[:ratings]|| session[:ratings] || {}
+    #
+    handler_filters_and_order
 
-    if @selected_ratings == {}
-      if params[:ratings].nil? and params[:commit].nil?
-        @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
-      end
-    end
-
-    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
-      session[:sort] = sort
-      session[:ratings] = @selected_ratings
-      redirect_to :sort => sort, :ratings => @selected_ratings and return
-    end
-
-    @movies = Movie.where(rating: @selected_ratings.keys).order(ordering)
+    @movies = Movie.where(rating: @selected_ratings.keys).order(@ordering)
 
   end
 
@@ -46,10 +27,6 @@ class MoviesController < ApplicationController
     @movie = Movie.create(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
-  end
-
-  def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
   end
 
   def edit
@@ -69,6 +46,54 @@ class MoviesController < ApplicationController
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
+  end
+
+  def movies_by_director
+    handler_filters_and_order
+
+    actual_movie = Movie.find(params[:id])
+
+    @movies = actual_movie.movies_with_same_director
+
+    if @movies.empty?
+      flash[:notice] = "This movie has no director"
+      redirect_to movie_path(actual_movie)
+    else
+      render 'movies/index'
+    end
+  end
+
+
+  private
+
+  def movie_params
+    params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
+  end
+
+  def handler_filters_and_order
+    sort = params[:sort] || session[:sort]
+
+    case sort
+    when 'title'
+      @ordering,@title_header = {:title => :asc}, 'hilite'
+    when 'release_date'
+      @ordering,@date_header = {:release_date => :asc}, 'hiorderinglite'
+    end
+
+    @all_ratings = Movie.all_ratings
+    @selected_ratings = params[:ratings]|| session[:ratings] || {}
+
+    if @selected_ratings == {}
+      if params[:ratings].nil? and params[:commit].nil?
+        @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
+      end
+    end
+
+    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+      session[:sort] = sort
+      session[:ratings] = @selected_ratings
+      redirect_to :sort => sort, :ratings => @selected_ratings
+    end
   end
 
 end

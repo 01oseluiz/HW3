@@ -53,3 +53,11 @@ Then(/^I should see "([^"]*)" before "([^"]*)"$/) do |name_1, name_2|
     assert page.has_xpath?('//*', :text => regexp)
   end
 end
+
+Given(/^The following movies has the following directors:$/) do |table|
+  table.rows.each do |row|
+    movie = Movie.find_by_title(row[0])
+    movie.director = row[1]
+    movie.save
+  end
+end

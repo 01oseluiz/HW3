@@ -57,16 +57,15 @@ Given I check the following ratings: PG, G, R, PG-13, NC-17
 
 
 Scenario: filter movies with the same director when movie has a director
-  Given I am on the page of the movie 'Alladin'
+  Given I am on the page of the movie 'Aladdin'
   And The following movies has the following directors:
   | title                   | director |
   | Aladdin                 | Stan Lee |
   | The Terminator          | Stan Lee |
   | When Harry Met Sally    | Stan Lee |
   | The Help                | Stan Lee |
-  Then I should see "Movies with same director"
   When I press "Movies with same director"
-  Then I should be on "Movies with director 'Stan Lee'"
+  Then I should be on Movies with director 'Stan Lee'
   And I should see "The Help"
   And I should see "Aladdin"
   And I should see "The Terminator"
@@ -74,7 +73,6 @@ Scenario: filter movies with the same director when movie has a director
 
 Scenario: filter movies with the same director when movie has not a director
   Given I am on thea page of the movie 'Aladdin'
-  Then I should see "Movies with same director"
   When I press "Movies with same director"
-  Then I should be on "the page of the movie 'Aladdin'"
+  Then I should be on the page of the movie 'Aladdin'
   And I should see "This movie has no director"
