@@ -22,7 +22,17 @@ module NavigationHelpers
     when /^the Create New Movie page/
       '/movies/new'
 
-    # Add more mappings here.
+    when /^the editing page of the movie '(.*)'/
+      edit_movie_path(Movie.find_by_title($1))
+
+    when /^the page of the movie '(.*)'/
+      movie_path(Movie.find_by_title($1))
+
+    when /^Movies with director '(.*)'/
+      movies_by_director_path(Movie.find_by_director($1))
+
+
+      # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
     #   when /^(.*)'s profile page$/i

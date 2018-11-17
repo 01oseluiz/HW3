@@ -9,3 +9,14 @@ Scenario: Add a movie
 	And I press "Save Changes"
 	Then I should be on the RottenPotatoes home page
 	And I should see "Men in Black"
+
+
+Scenario: Add director info to an existing movie
+	Given the following movies exist:
+	| title                   | rating | release_date |
+	| Aladdin                 | G      | 25-Nov-1992  |
+	And I am on the editing page of the movie 'Alladin'
+	When I fill in "Director" with "Stan Lee"
+	And I press "Update Movie Info"
+	Then I should be on the page of the movie 'Alladin'
+	And I should see "Stan Lee"

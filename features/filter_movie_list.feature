@@ -1,5 +1,5 @@
 Feature: display list of movies filtered by MPAA rating
- 
+
   As a concerned parent
   So that I can quickly browse movies appropriate for my family
   I want to see movies matching only certain MPAA ratings
@@ -20,7 +20,7 @@ Background: movies have been added to database
   | Chicken Run             | G      | 21-Jun-2000  |
 
   And  I am on the RottenPotatoes home page
-  
+
 Scenario: restrict to movies with 'PG' or 'R' ratings
   Given I check the following ratings: PG, R
   And I uncheck the following ratings: PG-13, G, NC-17
@@ -54,3 +54,27 @@ Scenario: all ratings selected
 Given I check the following ratings: PG, G, R, PG-13, NC-17
   And I press "Refresh"
   Then I should see all of the movies
+
+
+Scenario: filter movies with the same director when movie has a director
+  Given I am on the page of the movie 'Alladin'
+  And The following movies has the following directors:
+  | title                   | director |
+  | Aladdin                 | Stan Lee  |
+  | The Terminator          | Stan Lee  |
+  | When Harry Met Sally    | Stan Lee  |
+  | The Help                | Stan Lee  |
+  Then I should see "Movies with same director"
+  When I press "Movies with same director"
+  Then I should be on "Movies with director 'Stan Lee'"
+  And I should see "The Help"
+  And I should see "Aladdin"
+  And I should see "The Terminator"
+  And I should see "When Harry Met Sally"
+
+Scenario: filter movies with the same director when movie has not a director
+  Given I am on the page of the movie 'Alladin'
+  Then I should see "Movies with same director"
+  When I press "Movies with same director"
+  Then I should be on "the page of the movie 'Alladin'"
+  And I should see "This movie has no director"
