@@ -29,13 +29,12 @@ RSpec.describe MoviesController, type: :controller do
         before do
           Movie.all.each do |movie|
             movie.director = "Director X"
+            movie.save
           end
           Movie.create(title: 'When Harry Met Sally',  rating: 'R', release_date: '21-Jul-1989', director: "Another Director X")
         end
 
         it 'should show all movies with the same director' do
-          expect(Movie.count).not_to eq(0)
-
           Movie.all.each do |movie|
             get :movies_by_director, params: {id: movie.id}
             expect(response).to have_http_status(200)
@@ -46,7 +45,12 @@ RSpec.describe MoviesController, type: :controller do
 
       context 'when director not exist' do
         it 'should not show all movies with the same director' do
-          pending
+          expect(Movie.count).not_to eq(0)
+
+          Movie.all.each do |movie|
+            get :movies_by_director, params: {id: movie.id}
+            expect(response).to redirect_to(movie_path(movie))
+          end
         end
       end
     end

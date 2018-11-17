@@ -72,7 +72,7 @@ Scenario: filter movies with the same director when movie has a director
   And I should see "When Harry Met Sally"
 
 Scenario: filter movies with the same director when movie has not a director
-  Given I am on thea page of the movie 'Aladdin'
+  Given I am on the page of the movie 'Aladdin'
   When I press "Movies with same director"
   Then I should be on the page of the movie 'Aladdin'
   And I should see "This movie has no director"

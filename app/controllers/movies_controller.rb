@@ -54,7 +54,7 @@ class MoviesController < ApplicationController
 
     @movies = actual_movie.movies_with_same_director
 
-    if @movies.empty?
+    if @movies.nil?
       flash[:notice] = "This movie has no director"
       redirect_to movie_path(actual_movie)
     else

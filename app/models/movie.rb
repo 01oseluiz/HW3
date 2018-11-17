@@ -8,6 +8,7 @@ class Movie < ActiveRecord::Base
   end
 
   def movies_with_same_director
+    return if self.director.nil? or self.director.empty?
     Movie.where(:director => self.director)
   end
 

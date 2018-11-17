@@ -29,11 +29,14 @@ RSpec.describe Movie, type: :model do
         before do
           Movie.all.each do |movie|
             movie.director = "Director X"
+            movie.save
           end
           Movie.create(title: 'When Harry Met Sally',  rating: 'R', release_date: '21-Jul-1989', director: "Another Director X")
         end
 
         it 'should find movies with the same director' do
+          expect(Movie.count).not_to eq(0)
+
           Movie.all.each do |movie|
             expect(movie.movies_with_same_director.count).to be >= 1
             expect(movie.movies_with_same_director.include? movie).to be_truthy
@@ -43,7 +46,11 @@ RSpec.describe Movie, type: :model do
 
       context 'when director not exist' do
         it 'should not find movies with the same director' do
-          pending
+          expect(Movie.count).not_to eq(0)
+
+          Movie.all.each do |movie|
+            expect(movie.movies_with_same_director).to be_nil
+          end
         end
       end
     end
